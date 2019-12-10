@@ -1,3 +1,4 @@
 # hellofly
-A minimal Go/Gin application for tu
+A minimal Go/Gin application for tutorials
+
 
