@@ -11,7 +11,8 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*")
 
-	r.GET("/*name", handleIndex)
+	r.GET("/", handleIndex)
+	r.GET("/to/:name", handleIndex)
 	r.Run()
 }
 
@@ -21,6 +22,9 @@ type Hello struct {
 }
 
 func handleIndex(c *gin.Context) {
-	name := strings.TrimPrefix(c.Param("name"), "/")
+	name := c.Param("name")
+	if name != "" {
+		name = strings.TrimPrefix(c.Param("name"), "/")
+	}
 	c.HTML(http.StatusOK, "hellofly.tmpl", gin.H{"Name": name})
 }
