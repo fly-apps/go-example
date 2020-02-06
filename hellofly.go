@@ -16,11 +16,6 @@ func main() {
 	r.Run()
 }
 
-// Hello is page data for the template
-type Hello struct {
-	Name string
-}
-
 func handleIndex(c *gin.Context) {
 	name := c.Param("name")
 	if name != "" {
