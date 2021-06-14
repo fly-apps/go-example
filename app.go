@@ -1,25 +1,33 @@
 package main
 
 import (
+	"embed"
+	"html/template"
+	"log"
 	"net/http"
-	"strings"
-
-	"github.com/gin-gonic/gin"
+	"os"
 )
 
+//go:embed templates/*
+var resources embed.FS
+
+var t = template.Must(template.ParseFS(resources, "templates/*"))
+
 func main() {
-	r := gin.Default()
-	r.LoadHTMLGlob("./resources/templates/*")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 
-	r.GET("/", handleIndex)
-	r.GET("/:name", handleIndex)
-	r.Run(":8080")
-}
-
-func handleIndex(c *gin.Context) {
-	name := c.Param("name")
-	if name != "" {
-		name = strings.TrimPrefix(c.Param("name"), "/")
 	}
-	c.HTML(http.StatusOK, "hellofly.tmpl", gin.H{"Name": name})
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		data := map[string]string{
+			"Region": os.Getenv("FLY_REGION"),
+		}
+
+		t.ExecuteTemplate(w, "index.html.tmpl", data)
+	})
+
+	log.Println("listening on", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
