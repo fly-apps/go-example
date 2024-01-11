@@ -5,7 +5,7 @@ on:
       - master # change to main if needed
 jobs:
   deploy:
-    name: Deploy app
+    name: github-workflow-test
     runs-on: ubuntu-latest
     concurrency: deploy-group # optional: ensure only one action runs at a time
     steps:
